@@ -1,7 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TopAlbums from "../components/AlbumsPage";
 import TopArtists from "../components/ArtistsPage";
-import Navbar from "../components/Navbar";
 import TopTracks from "../components/TracksPage";
 
 export default function HomePage() {
@@ -9,7 +8,6 @@ export default function HomePage() {
 
 	return (
 		<div className="flex flex-col items-center">
-			<Navbar />
 			<div className="mx-auto container">
 				{/* Search bar */}
 				{/* <div className="w-full mt-8 flex justify-center">

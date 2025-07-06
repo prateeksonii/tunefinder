@@ -1,4 +1,5 @@
-import { RiMusicAiFill } from "react-icons/ri";
+import { Music4 } from "lucide-react";
+import { Link } from "react-router";
 
 export default function Navbar() {
 	return (
@@ -6,10 +7,10 @@ export default function Navbar() {
 			<div className="mx-auto container flex items-center justify-between">
 				{/* Left side: logo and nav items */}
 				<div className="flex items-center gap-6">
-					<div className="flex items-center gap-2">
-						<RiMusicAiFill className="text-white text-2xl" />
+					<Link to="/" className="flex items-center gap-2">
+						<Music4 className="text-white text-2xl" />
 						<span className="text-white text-xl font-semibold">TuneFinder</span>
-					</div>
+					</Link>
 					<div className="flex items-center gap-4">
 						{/* <span className="text-white text-sm font-semibold">Home</span>
             <span className="text-white text-sm font-semibold">Explore</span>

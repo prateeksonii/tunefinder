@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./styles.css";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { Toaster } from "sonner";
+import Layout from "./components/layout";
 import { SpotifyTokenProvider } from "./contexts/SpotifyContext";
 import AlbumPage from "./routes/album";
 import ArtistPage from "./routes/artist";
@@ -11,15 +12,21 @@ import HomePage from "./routes/home";
 const routes = createBrowserRouter([
 	{
 		path: "/",
-		element: <HomePage />,
-	},
-	{
-		path: "/artists/:id",
-		element: <ArtistPage />,
-	},
-	{
-		path: "/albums/:id",
-		element: <AlbumPage />,
+		element: <Layout />,
+		children: [
+			{
+				path: "/",
+				element: <HomePage />,
+			},
+			{
+				path: "/artists/:id",
+				element: <ArtistPage />,
+			},
+			{
+				path: "/albums/:id",
+				element: <AlbumPage />,
+			},
+		],
 	},
 ]);
 
