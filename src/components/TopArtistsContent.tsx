@@ -3,7 +3,7 @@
 import { LoaderCircle } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import type { Artist } from "@/types";
 import { useSpotifyToken } from "../contexts/SpotifyContext";
 
@@ -28,7 +28,6 @@ const TopArtistsContent: React.FC = () => {
 	const { token } = useSpotifyToken();
 	const [topArtists, setTopArtists] = useState<EnrichedArtist[]>([]);
 	const [loading, setLoading] = useState(true);
-	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (!token) return;
