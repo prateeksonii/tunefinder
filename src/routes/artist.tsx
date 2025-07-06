@@ -1,9 +1,9 @@
 import ColorThief from "colorthief";
 import { LoaderCircle } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
 import ArtistTracks from "@/components/ArtistTracks";
-import { useSpotifyToken } from "@/contexts/SpotifyContext";
+import { AppContext } from "@/contexts/AppContext";
 import type { Artist } from "@/types";
 
 async function fetchArtistDetails(artistId: string, token: string) {
@@ -20,7 +20,7 @@ const formatter = Intl.NumberFormat("en-US", {});
 
 export default function ArtistPage() {
 	const params = useParams();
-	const { token } = useSpotifyToken();
+	const { token } = useContext(AppContext);
 	const [artist, setArtist] = useState<Artist>();
 	const [loading, setLoading] = useState(true);
 	const imageRef = useRef<HTMLImageElement>(null);

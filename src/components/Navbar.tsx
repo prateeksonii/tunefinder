@@ -1,8 +1,10 @@
 import { Music4 } from "lucide-react";
-import { use } from "react";
+import { useContext } from "react";
 import { Link } from "react-router";
+import { AppContext } from "@/contexts/AppContext";
 import { supabase } from "@/lib/supabase/client";
 import { LoginForm } from "./login-form";
+import { Button } from "./ui/button";
 import {
 	Dialog,
 	DialogContent,
@@ -12,7 +14,7 @@ import {
 } from "./ui/dialog";
 
 export default function Navbar() {
-	// console.log(user);
+	const { user } = useContext(AppContext);
 	return (
 		<div className="sticky top-0 w-full h-16 border-b bg-background border-white z-50 flex items-center">
 			<div className="mx-auto container flex items-center justify-between">
@@ -22,28 +24,21 @@ export default function Navbar() {
 						<Music4 className="text-white text-2xl" />
 						<span className="text-white text-xl font-semibold">TuneFinder</span>
 					</Link>
-					<div className="flex items-center gap-4">
-						{/* <span className="text-white text-sm font-semibold">Home</span>
-            <span className="text-white text-sm font-semibold">Explore</span>
-            <span className="text-white text-sm font-semibold">Library</span> */}
-					</div>
+					<div className="flex items-center gap-4"></div>
 				</div>
-
-				{/* Right side: profile icon */}
-				{/* <img
-          src={profileIcon}
-          alt="Profile"
-          className="h-10 w-10 rounded-full"
-        /> */}
-				<Dialog>
-					<DialogTrigger>Login</DialogTrigger>
-					<DialogContent>
-						<DialogHeader>
-							<DialogTitle>Login</DialogTitle>
-						</DialogHeader>
-						<LoginForm />
-					</DialogContent>
-				</Dialog>
+				{user ? (
+					<Button onClick={() => supabase.auth.signOut()}>Log out</Button>
+				) : (
+					<Dialog>
+						<DialogTrigger>Login</DialogTrigger>
+						<DialogContent>
+							<DialogHeader>
+								<DialogTitle>Login</DialogTitle>
+							</DialogHeader>
+							<LoginForm />
+						</DialogContent>
+					</Dialog>
+				)}
 			</div>
 		</div>
 	);

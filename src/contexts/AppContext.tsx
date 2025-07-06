@@ -1,24 +1,28 @@
 /** biome-ignore-all lint/correctness/useExhaustiveDependencies: <explanation> */
+
+import type { User } from "@supabase/supabase-js";
 import type React from "react";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase/client";
 
 const CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
 const CLIENT_SECRET = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
 
-type SpotifyTokenContextType = {
+type AppContextType = {
 	token: string | null;
+	user: User | null;
 };
 
-const SpotifyTokenContext = createContext<SpotifyTokenContextType>({
+export const AppContext = createContext<AppContextType>({
 	token: null,
+	user: null,
 });
 
-export const useSpotifyToken = () => useContext(SpotifyTokenContext);
-
-export const SpotifyTokenProvider: React.FC<{ children: React.ReactNode }> = ({
+export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
 	const [token, setToken] = useState<string | null>(null);
+	const [user, setUser] = useState<User | null>(null);
 
 	const clearToken = () => {
 		localStorage.removeItem("spotify_token");
@@ -82,9 +86,17 @@ export const SpotifyTokenProvider: React.FC<{ children: React.ReactNode }> = ({
 		fetchToken();
 	}, []);
 
+	useEffect(() => {
+		const sub = supabase.auth.onAuthStateChange((_, session) => {
+			setUser(session?.user ?? null);
+		});
+
+		return () => sub.data.subscription.unsubscribe();
+	}, []);
+
 	return (
-		<SpotifyTokenContext.Provider value={{ token }}>
+		<AppContext.Provider value={{ token, user }}>
 			{children}
-		</SpotifyTokenContext.Provider>
+		</AppContext.Provider>
 	);
 };

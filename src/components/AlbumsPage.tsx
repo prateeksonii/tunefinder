@@ -1,7 +1,7 @@
 import type React from "react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router";
-import { useSpotifyToken } from "../contexts/SpotifyContext";
+import { AppContext } from "../contexts/AppContext";
 
 type AlbumImage = { "#text": string; size: string };
 type Album = {
@@ -16,7 +16,7 @@ type EnrichedAlbum = Album & {
 };
 
 const TopAlbums: React.FC = () => {
-	const { token } = useSpotifyToken();
+	const { token } = useContext(AppContext);
 	const [topAlbums, setTopAlbums] = useState<EnrichedAlbum[]>([]);
 
 	useEffect(() => {

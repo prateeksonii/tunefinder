@@ -1,7 +1,7 @@
 import { Duration } from "luxon";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import type { Item } from "@/types";
-import { useSpotifyToken } from "../contexts/SpotifyContext";
+import { AppContext } from "../contexts/AppContext";
 import { Badge } from "./ui/badge";
 import { Separator } from "./ui/separator";
 
@@ -26,7 +26,7 @@ type EnrichedTrack = Track & {
 };
 
 const TopTracks: React.FC = () => {
-	const { token } = useSpotifyToken();
+	const { token } = useContext(AppContext);
 	const [topTracks, setTopTracks] = useState<EnrichedTrack[]>([]);
 
 	useEffect(() => {

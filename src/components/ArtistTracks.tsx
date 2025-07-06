@@ -1,8 +1,8 @@
 import { LoaderCircle } from "lucide-react";
 import { Duration } from "luxon";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { useSpotifyToken } from "@/contexts/SpotifyContext";
+import { AppContext } from "@/contexts/AppContext";
 import type { ArtistTrackResponse } from "@/types";
 import { Badge } from "./ui/badge";
 import { Separator } from "./ui/separator";
@@ -22,7 +22,7 @@ async function fetchArtistTracks(artistId: string, token: string) {
 
 export default function ArtistTracks() {
 	const params = useParams();
-	const { token } = useSpotifyToken();
+	const { token } = useContext(AppContext);
 
 	const [loading, setLoading] = useState(true);
 	const [trackResponse, setTrackResponse] = useState<ArtistTrackResponse>();

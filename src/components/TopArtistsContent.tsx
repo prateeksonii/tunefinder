@@ -2,10 +2,10 @@
 
 import { LoaderCircle } from "lucide-react";
 import type React from "react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router";
+import { AppContext } from "@/contexts/AppContext";
 import type { Artist } from "@/types";
-import { useSpotifyToken } from "../contexts/SpotifyContext";
 
 type ArtistImage = {
 	"#text": string;
@@ -25,7 +25,7 @@ type EnrichedArtist = LastFMArtist & {
 };
 
 const TopArtistsContent: React.FC = () => {
-	const { token } = useSpotifyToken();
+	const { token } = useContext(AppContext);
 	const [topArtists, setTopArtists] = useState<EnrichedArtist[]>([]);
 	const [loading, setLoading] = useState(true);
 

@@ -1,9 +1,9 @@
 import ColorThief from "colorthief";
 import { LoaderCircle } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
 import AlbumTracks from "@/components/AlbumTracks";
-import { useSpotifyToken } from "@/contexts/SpotifyContext";
+import { AppContext } from "@/contexts/AppContext";
 import type { AlbumResponse } from "@/types";
 
 async function fetchAlbumDetails(albumId: string, token: string) {
@@ -18,7 +18,7 @@ async function fetchAlbumDetails(albumId: string, token: string) {
 
 export default function AlbumPage() {
 	const params = useParams();
-	const { token } = useSpotifyToken();
+	const { token } = useContext(AppContext);
 	const [albumResponse, setAlbumResponse] = useState<AlbumResponse>();
 	const [loading, setLoading] = useState(true);
 	const imageRef = useRef<HTMLImageElement>(null);

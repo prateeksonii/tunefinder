@@ -4,7 +4,7 @@ import "./styles.css";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { Toaster } from "sonner";
 import Layout from "./components/layout";
-import { SpotifyTokenProvider } from "./contexts/SpotifyContext";
+import { AppContextProvider } from "./contexts/AppContext";
 import AlbumPage from "./routes/album";
 import ArtistPage from "./routes/artist";
 import HomePage from "./routes/home";
@@ -33,9 +33,9 @@ const routes = createBrowserRouter([
 // biome-ignore lint/style/noNonNullAssertion: required for react
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
-		<SpotifyTokenProvider>
+		<AppContextProvider>
 			<RouterProvider router={routes} />
 			<Toaster />
-		</SpotifyTokenProvider>
+		</AppContextProvider>
 	</StrictMode>,
 );
