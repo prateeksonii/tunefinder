@@ -84,7 +84,7 @@ const TopArtistsContent: React.FC = () => {
 		<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
 			{topArtists.map((artist) => (
 				<Link
-					key={artist.mbid || artist.name}
+					key={artist.name}
 					className="flex flex-col items-center text-white relative"
 					to={`/artists/${artist.spotifyData?.id}`}
 				>

@@ -1,119 +1,135 @@
+import { Duration } from "luxon";
 import React, { useEffect, useState } from "react";
+import type { Item } from "@/types";
 import { useSpotifyToken } from "../contexts/SpotifyContext";
+import { Badge } from "./ui/badge";
+import { Separator } from "./ui/separator";
 
 // Define types for Last.fm track data
 type TrackImage = {
-  "#text": string;
-  size: string;
+	"#text": string;
+	size: string;
 };
 
 type Track = {
-  name: string;
-  artist: {
-    name: string;
-  };
-  url: string;
-  image: TrackImage[];
+	name: string;
+	artist: {
+		name: string;
+	};
+	url: string;
+	image: TrackImage[];
 };
 
 // Extend Track to include Spotify image
 type EnrichedTrack = Track & {
-  spotifyImage?: string;
+	spotifyData?: Item;
 };
 
 const TopTracks: React.FC = () => {
-  const { token } = useSpotifyToken();
-  const [topTracks, setTopTracks] = useState<EnrichedTrack[]>([]);
+	const { token } = useSpotifyToken();
+	const [topTracks, setTopTracks] = useState<EnrichedTrack[]>([]);
 
-  useEffect(() => {
-    // Step 1: Ensure token is available
-    if (!token) return;
+	useEffect(() => {
+		if (!token) return;
 
-    // Step 2: Fetch top disco tracks from Last.fm
-    const fetchTopTracks = async () => {
-      try {
-        const res = await fetch(
-          `https://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=rap&api_key=${import.meta.env.VITE_LASTFM_API_KEY}&limit=16&format=json`
-        );
-        const data = await res.json();
+		const fetchTopTracks = async () => {
+			try {
+				const res = await fetch(
+					`https://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=rap&api_key=${import.meta.env.VITE_LASTFM_API_KEY}&limit=16&format=json`,
+				);
+				const data = await res.json();
 
-        // Step 3: Get first 12 tracks
-        const tracks: Track[] = data.tracks.track.slice(0, 12);
+				const enriched = await Promise.all(
+					// biome-ignore lint/suspicious/noExplicitAny: response structure not strict
+					data.tracks.track.map(async (track: any) => {
+						try {
+							const spotifyRes = await fetch(
+								`https://api.spotify.com/v1/search?q=track:${encodeURIComponent(
+									track.name,
+								)} artist:${encodeURIComponent(track.artist.name)}&type=track&limit=1`,
+								{
+									headers: {
+										Authorization: `Bearer ${token}`,
+									},
+								},
+							);
+							const spotifyData = await spotifyRes.json();
 
-        // Step 4: Enrich each with Spotify image via search
-        const enriched = await Promise.all(
-          tracks.map(async (track) => {
-            try {
-              const spotifyRes = await fetch(
-                `https://api.spotify.com/v1/search?q=track:${encodeURIComponent(
-                  track.name
-                )} artist:${encodeURIComponent(track.artist.name)}&type=track&limit=1`,
-                {
-                  headers: {
-                    Authorization: `Bearer ${token}`,
-                  },
-                }
-              );
-              const spotifyData = await spotifyRes.json();
-              const image =
-                spotifyData.tracks?.items?.[0]?.album?.images?.[0]?.url || "";
+							return {
+								...track,
+								spotifyData: spotifyData.tracks.items[0],
+							};
+						} catch {
+							return {
+								...track,
+								spotifyData: null,
+							};
+						}
+					}),
+				);
 
-              return {
-                ...track,
-                spotifyImage: image,
-              };
-            } catch {
-              return {
-                ...track,
-                spotifyImage: "",
-              };
-            }
-          })
-        );
+				setTopTracks(enriched);
+			} catch (error) {
+				console.error("Failed to fetch top tracks:", error);
+			}
+		};
 
-        // Step 5: Update UI
-        setTopTracks(enriched);
-      } catch (error) {
-        console.error("Failed to fetch top tracks:", error);
-      }
-    };
+		fetchTopTracks();
+	}, [token]);
 
-    fetchTopTracks();
-  }, [token]);
-
-  // Step 6: Render the layout
-  return (
-    <div className="flex flex-col gap-4 w-full">
-      <h2 className="text-white text-xl font-semibold pb-2">Top Featured Tracks</h2>
-      <div className="flex flex-wrap gap-6 justify-start">
-        {topTracks.map((track, index) => (
-          <div
-            key={`${track.name}-${index}`}
-            className="flex flex-col items-center text-white w-[100px]"
-          >
-            <img
-              src={
-                track.spotifyImage ||
-                track.image.find((img) => img.size === "large")?.["#text"] ||
-                "https://via.placeholder.com/150"
-              }
-              alt={track.name}
-              className="w-20 h-20 rounded object-cover mb-2"
-            />
-            <a
-              href={track.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-white hover:underline text-center"
-            >
-              {track.name}
-            </a>
-            <p className="text-xs text-gray-300 text-center">{track.artist.name}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+	// Step 6: Render the layout
+	return (
+		<div className="flex flex-col gap-4 w-full">
+			<h2 className="text-white text-xl font-semibold pb-2">
+				Top Featured Tracks
+			</h2>
+			<div className="flex flex-col gap-3">
+				{topTracks.map((track, index) => (
+					<React.Fragment key={track.url}>
+						<a
+							key={`${track.name}-${index}`}
+							className="flex items-center gap-8"
+							href={track.spotifyData?.external_urls.spotify}
+						>
+							<img
+								src={
+									track.spotifyData?.album?.images?.[0]?.url ||
+									track.image.find((img) => img.size === "large")?.["#text"] ||
+									"https://via.placeholder.com/150"
+								}
+								alt={track.name}
+								className="w-24 h-24 rounded-md object-cover"
+							/>
+							<div className="w-full flex items-center justify-between">
+								<div className="flex flex-col gap-2">
+									<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
+										{track.name}
+									</h3>
+									<p>{track.artist.name}</p>
+									<p className="flex items-center gap-2">
+										{track.spotifyData?.explicit && (
+											<Badge
+												className="flex items-center text-xs"
+												variant="destructive"
+											>
+												E
+											</Badge>
+										)}
+									</p>
+								</div>
+								<span>
+									{Duration.fromMillis(
+										track.spotifyData?.duration_ms ?? 0,
+									).toFormat("m:ss")}
+								</span>
+							</div>
+						</a>
+						<Separator />
+					</React.Fragment>
+				))}
+			</div>
+		</div>
+	);
 };
 
 export default TopTracks;

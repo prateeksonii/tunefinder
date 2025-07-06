@@ -74,7 +74,7 @@ const TopAlbums: React.FC = () => {
 					<Link
 						key={album.spotifyId}
 						className="flex flex-col items-center text-white relative"
-						to={"#"}
+						to={`/albums/${album.spotifyId}`}
 					>
 						<img
 							src={

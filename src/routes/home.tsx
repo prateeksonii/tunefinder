@@ -22,15 +22,12 @@ export default function HomePage() {
 						<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white text-lg" />
 					</div>
 				</div> */}
-				{/* Tabs */}
 				<Tabs defaultValue="Artists">
 					<TabsList className="bg-background mx-auto my-4">
 						{tabs.map((tab) => (
-							<>
-								<TabsTrigger key={tab} value={tab}>
-									{tab}
-								</TabsTrigger>
-							</>
+							<TabsTrigger key={tab} value={tab}>
+								{tab}
+							</TabsTrigger>
 						))}
 					</TabsList>
 					<TabsContent value="Artists">
