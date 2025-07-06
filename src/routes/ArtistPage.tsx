@@ -75,7 +75,7 @@ export default function ArtistPage() {
 					backgroundColor: bgColor,
 				}}
 			>
-				<div className="mx-auto container grid grid-cols-2 place-items-center gap-3">
+				<div className="mx-auto container flex items-center gap-8">
 					<div>
 						<img
 							ref={imageRef}

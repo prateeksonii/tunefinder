@@ -95,9 +95,9 @@ const TopArtistsContent: React.FC = () => {
 							"https://via.placeholder.com/150"
 						}
 						alt={artist.name}
-						className="w-full h-full rounded-md object-cover mb-2"
+						className="w-full h-full rounded-md object-cover mb-2 brightness-50"
 					/>
-					<h3 className="scroll-m-20 text-2xl font-semibold tracking-tight absolute bottom-5">
+					<h3 className="scroll-m-20 text-2xl font-semibold tracking-tight absolute left-5 right-5 text-center bottom-5">
 						{artist.name}
 					</h3>
 				</Link>
