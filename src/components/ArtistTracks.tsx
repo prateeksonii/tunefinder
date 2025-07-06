@@ -1,7 +1,7 @@
 import { LoaderCircle } from "lucide-react";
 import { Duration } from "luxon";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router";
+import { useParams } from "react-router";
 import { useSpotifyToken } from "@/contexts/SpotifyContext";
 import type { ArtistTrackResponse } from "@/types";
 import { Badge } from "./ui/badge";
