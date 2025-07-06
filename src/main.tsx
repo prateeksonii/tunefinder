@@ -3,14 +3,14 @@ import { createRoot } from "react-dom/client";
 import "./styles.css";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { Toaster } from "sonner";
-import LandingPage from "./components/LandingPage";
+import HomePage from "./routes/home";
 import { SpotifyTokenProvider } from "./contexts/SpotifyContext";
-import ArtistPage from "./routes/ArtistPage";
+import ArtistPage from "./routes/artist";
 
 const routes = createBrowserRouter([
 	{
 		path: "/",
-		element: <LandingPage />,
+		element: <HomePage />,
 	},
 	{
 		path: "/artists/:id",
