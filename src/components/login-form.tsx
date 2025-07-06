@@ -1,20 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
 import { supabase } from "@/lib/supabase/client";
-import { cn } from "@/lib/utils";
 
-export function LoginForm({
-	className,
-	...props
-}: React.ComponentPropsWithoutRef<"div">) {
+export function LoginForm() {
 	const [error, setError] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const navigate = useNavigate();
