@@ -2,6 +2,7 @@ import ColorThief from "colorthief";
 import { LoaderCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
+import ArtistTracks from "@/components/ArtistTracks";
 import { useSpotifyToken } from "@/contexts/SpotifyContext";
 import type { Artist } from "@/types";
 
@@ -36,12 +37,28 @@ export default function ArtistPage() {
 	}, [params.id, token]);
 
 	useEffect(() => {
-		console.log(imageRef.current);
-		if (!imageRef.current || !imageRef.current.complete) return;
+		const img = imageRef.current;
+		if (!img) return;
+
 		if (loading) return;
-		const colorThief = new ColorThief();
-		const colors = colorThief.getColor(imageRef.current);
-		setBgColor(`rgba(${colors.join(",")},0.8`);
+
+		const handleLoad = () => {
+			const colorThief = new ColorThief();
+			const colors = colorThief.getColor(img);
+			setBgColor(`rgba(${colors.join(",")},0.8)`);
+		};
+
+		if (img.complete) {
+			// Image was already loaded (cache)
+			handleLoad();
+		} else {
+			// Wait for it to load
+			img.addEventListener("load", handleLoad);
+		}
+
+		return () => {
+			img.removeEventListener("load", handleLoad);
+		};
 	}, [loading]);
 
 	if (loading) {
@@ -80,6 +97,7 @@ export default function ArtistPage() {
 					</div>
 				</div>
 			</div>
+			<ArtistTracks />
 		</div>
 	);
 }
