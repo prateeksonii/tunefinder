@@ -15,9 +15,28 @@ type EnrichedAlbum = Album & {
 	spotifyId?: string | null;
 };
 
-const TopAlbums: React.FC = () => {
+type Props = {
+	showFavorites: boolean;
+	favorites: {
+		created_at: string;
+		id: number;
+		item_spotify_id: string;
+		type: string;
+		user_id: string | null;
+	}[];
+};
+
+export default function TopAlbums({ favorites, showFavorites }: Props) {
 	const { token } = useContext(AppContext);
 	const [topAlbums, setTopAlbums] = useState<EnrichedAlbum[]>([]);
+
+	const favoriteIds = favorites.map((f) => f.item_spotify_id);
+
+	const albums = showFavorites
+		? topAlbums.filter(
+				(album) => album.spotifyId && favoriteIds.includes(album.spotifyId),
+			)
+		: topAlbums;
 
 	useEffect(() => {
 		if (!token) return;
@@ -67,10 +86,10 @@ const TopAlbums: React.FC = () => {
 	return (
 		<div className="flex flex-col gap-4 w-full">
 			<h2 className="text-white text-xl font-semibold pb-2">
-				Top Featured Albums
+				{showFavorites ? "Favorite Albums" : "Top Featured Albums"}
 			</h2>
 			<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-				{topAlbums.map((album) => (
+				{albums.map((album) => (
 					<Link
 						key={album.spotifyId}
 						className="flex flex-col items-center text-white relative"
@@ -93,6 +112,4 @@ const TopAlbums: React.FC = () => {
 			</div>
 		</div>
 	);
-};
-
-export default TopAlbums;
+}

@@ -16,6 +16,9 @@ export function LoginForm() {
 		try {
 			const { error } = await supabase.auth.signInWithOAuth({
 				provider: "google",
+				options: {
+					redirectTo: import.meta.env.VITE_SUPABASE_REDIRECT_URL,
+				},
 			});
 
 			if (error) throw error;

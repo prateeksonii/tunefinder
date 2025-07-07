@@ -1,9 +1,13 @@
 import ColorThief from "colorthief";
-import { LoaderCircle } from "lucide-react";
+import { Heart, LoaderCircle } from "lucide-react";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
+import { toast } from "sonner";
 import AlbumTracks from "@/components/AlbumTracks";
+import { Button } from "@/components/ui/button";
 import { AppContext } from "@/contexts/AppContext";
+import { supabase } from "@/lib/supabase/client";
+import { cn } from "@/lib/utils";
 import type { AlbumResponse } from "@/types";
 
 async function fetchAlbumDetails(albumId: string, token: string) {
@@ -16,13 +20,29 @@ async function fetchAlbumDetails(albumId: string, token: string) {
 	return res.json();
 }
 
+async function checkFavorite(
+	albumId: string,
+	userId: string,
+): Promise<boolean> {
+	const { count } = await supabase
+		.from("favorites")
+		.select("*", { count: "exact" })
+		.match({
+			user_id: userId,
+			item_spotify_id: albumId,
+			type: "Albums",
+		});
+	return count ? count > 0 : false;
+}
+
 export default function AlbumPage() {
 	const params = useParams();
-	const { token } = useContext(AppContext);
+	const { token, user } = useContext(AppContext);
 	const [albumResponse, setAlbumResponse] = useState<AlbumResponse>();
 	const [loading, setLoading] = useState(true);
 	const imageRef = useRef<HTMLImageElement>(null);
 	const [bgColor, setBgColor] = useState("");
+	const [isFavorite, setIsFavorite] = useState(false);
 
 	useEffect(() => {
 		if (!params.id || !token) return;
@@ -32,7 +52,12 @@ export default function AlbumPage() {
 			setAlbumResponse(data);
 			setLoading(false);
 		});
-	}, [params.id, token]);
+		if (user) {
+			checkFavorite(params.id, user.id).then((isFavorite) => {
+				setIsFavorite(isFavorite);
+			});
+		}
+	}, [params.id, token, user]);
 
 	useEffect(() => {
 		const img = imageRef.current;
@@ -58,6 +83,33 @@ export default function AlbumPage() {
 			img.removeEventListener("load", handleLoad);
 		};
 	}, [loading]);
+
+	const toggleFavorite = async () => {
+		if (!user) return;
+		if (isFavorite) {
+			await supabase.from("favorites").delete().match({
+				// biome-ignore lint/style/noNonNullAssertion: already checked
+				item_spotify_id: params.id!,
+				type: "Albums",
+				user_id: user.id,
+			});
+			setIsFavorite(false);
+			return;
+		}
+		const { error } = await supabase.from("favorites").insert({
+			// biome-ignore lint/style/noNonNullAssertion: already checked above
+			item_spotify_id: params.id!,
+			type: "Albums",
+			user_id: user?.id,
+		});
+
+		if (error) {
+			toast.error(error.message);
+			return;
+		}
+
+		setIsFavorite(true);
+	};
 
 	if (loading) {
 		return <LoaderCircle className="animate-spin" />;
@@ -92,6 +144,23 @@ export default function AlbumPage() {
 						<div className="mt-2 text-2xl">
 							{albumResponse.artists.map((artist) => artist.name).join(", ")}
 						</div>
+						{user && (
+							<Button
+								variant="outline"
+								className="mt-4"
+								onClick={toggleFavorite}
+							>
+								<Heart
+									onClick={toggleFavorite}
+									size={24}
+									className={cn(
+										"w-6 h-6",
+										isFavorite ? "fill-foreground" : "fill-none",
+									)}
+								/>{" "}
+								Favorite
+							</Button>
+						)}
 					</div>
 				</div>
 			</div>

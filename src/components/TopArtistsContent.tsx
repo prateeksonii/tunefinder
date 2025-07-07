@@ -24,7 +24,18 @@ type EnrichedArtist = LastFMArtist & {
 	spotifyData?: Artist;
 };
 
-const TopArtistsContent: React.FC = () => {
+type Props = {
+	showFavorites: boolean;
+	favorites: {
+		created_at: string;
+		id: number;
+		item_spotify_id: string;
+		type: string;
+		user_id: string | null;
+	}[];
+};
+
+export default function TopArtistsContent({ showFavorites, favorites }: Props) {
 	const { token } = useContext(AppContext);
 	const [topArtists, setTopArtists] = useState<EnrichedArtist[]>([]);
 	const [loading, setLoading] = useState(true);
@@ -80,30 +91,44 @@ const TopArtistsContent: React.FC = () => {
 		return <LoaderCircle className="animate-spin" />;
 	}
 
+	const favoriteIds = favorites.map((f) => f.item_spotify_id);
+
+	const artists = showFavorites
+		? topArtists.filter(
+				(artist) =>
+					artist.spotifyData && favoriteIds.includes(artist.spotifyData.id),
+			)
+		: topArtists;
+
 	return (
-		<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-			{topArtists.map((artist) => (
-				<Link
-					key={artist.name}
-					className="flex flex-col items-center text-white relative"
-					to={`/artists/${artist.spotifyData?.id}`}
-				>
-					<img
-						src={
-							artist.spotifyData?.images[0].url ||
-							artist.image.find((img) => img.size === "large")?.["#text"] ||
-							"https://via.placeholder.com/150"
-						}
-						alt={artist.name}
-						className="w-full h-full rounded-md object-cover mb-2 brightness-50"
-					/>
-					<h3 className="scroll-m-20 text-2xl font-semibold tracking-tight absolute left-5 right-5 text-center bottom-5">
-						{artist.name}
-					</h3>
-				</Link>
-			))}
+		<div className="flex flex-col gap-4 w-full">
+			<h2 className="text-white text-xl font-semibold pb-2">
+				{showFavorites ? "Favorite Artists" : "Top Featured Artists"}
+			</h2>
+			<div className="mx-auto container">
+				<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+					{artists.map((artist) => (
+						<Link
+							key={artist.name}
+							className="flex flex-col items-center text-white relative"
+							to={`/artists/${artist.spotifyData?.id}`}
+						>
+							<img
+								src={
+									artist.spotifyData?.images[0].url ||
+									artist.image.find((img) => img.size === "large")?.["#text"] ||
+									"https://via.placeholder.com/150"
+								}
+								alt={artist.name}
+								className="w-full h-full rounded-md object-cover mb-2 brightness-50"
+							/>
+							<h3 className="scroll-m-20 text-2xl font-semibold tracking-tight absolute left-5 right-5 text-center bottom-5">
+								{artist.name}
+							</h3>
+						</Link>
+					))}
+				</div>
+			</div>
 		</div>
 	);
-};
-
-export default TopArtistsContent;
+}
