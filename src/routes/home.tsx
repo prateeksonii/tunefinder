@@ -82,7 +82,10 @@ export default function HomePage() {
 						/>
 					</TabsContent>
 					<TabsContent value="Albums">
-						<TopAlbums showFavorites={showFavorites} favorites={favorites} />
+						<TopAlbums
+							showFavorites={showFavorites}
+							favorites={favorites ?? []}
+						/>
 					</TabsContent>
 					<TabsContent value="Tracks">
 						<TopTracks />

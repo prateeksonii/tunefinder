@@ -1,7 +1,6 @@
 // components/TopArtistsContent.tsx
 
 import { LoaderCircle } from "lucide-react";
-import type React from "react";
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router";
 import { AppContext } from "@/contexts/AppContext";

@@ -1,6 +1,5 @@
 import { Duration } from "luxon";
 import React, { useContext, useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase/client";
 import type { Item } from "@/types";
 import { AppContext } from "../contexts/AppContext";
 import { Badge } from "./ui/badge";
