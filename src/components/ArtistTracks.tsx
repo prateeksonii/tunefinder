@@ -40,7 +40,7 @@ export default function ArtistTracks() {
 	if (loading) return <LoaderCircle className="animate-spin" />;
 
 	return (
-		<div className="mt-8 mx-auto container">
+		<div className="mt-8 mx-auto container px-4 md:px-0">
 			<h2 className="scroll-m-20 mb-8 text-3xl font-semibold tracking-tight first:mt-0">
 				Top Tracks
 			</h2>
@@ -55,10 +55,10 @@ export default function ArtistTracks() {
 							<img
 								src={track.album.images[0].url}
 								alt={track.album.name}
-								className="w-24 h-24 rounded-md object-cover mb-2"
+								className="w-12 h-12 md:w-24 md:h-24 rounded-md object-cover mb-2"
 							/>
 							<div className="flex flex-col gap-2">
-								<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
+								<h3 className="scroll-m-20 text-lg md:text-xl font-semibold tracking-tight">
 									{track.name}
 								</h3>
 								<p className="flex items-center gap-2">

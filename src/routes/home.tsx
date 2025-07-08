@@ -53,7 +53,7 @@ export default function HomePage() {
 		<div className="flex flex-col items-center">
 			<div className="mx-auto container mt-4">
 				<Tabs defaultValue="Artists" onValueChange={onTabChanged}>
-					<div className="grid grid-cols-3 place-items-center">
+					<div className="grid grid-cols-1 md:grid-cols-3 place-items-center">
 						<div aria-hidden></div>
 						<TabsList className="bg-background">
 							{tabs.map((tab) => (
@@ -62,7 +62,7 @@ export default function HomePage() {
 								</TabsTrigger>
 							))}
 						</TabsList>
-						<div className="flex items-center gap-2 place-self-end">
+						<div className="flex items-center gap-2 px-4 md:px-0 py-4 md:py-0 place-self-center md:place-self-end">
 							{user && currentTab !== "Tracks" && (
 								<>
 									<Checkbox
@@ -75,19 +75,19 @@ export default function HomePage() {
 						</div>
 					</div>
 
-					<TabsContent value="Artists">
+					<TabsContent className="px-4 md:px-0" value="Artists">
 						<TopArtistsContent
 							showFavorites={showFavorites}
 							favorites={favorites ?? []}
 						/>
 					</TabsContent>
-					<TabsContent value="Albums">
+					<TabsContent className="px-4 md:px-0" value="Albums">
 						<TopAlbums
 							showFavorites={showFavorites}
 							favorites={favorites ?? []}
 						/>
 					</TabsContent>
-					<TabsContent value="Tracks">
+					<TabsContent className="px-4 md:px-0" value="Tracks">
 						<TopTracks />
 					</TabsContent>
 				</Tabs>

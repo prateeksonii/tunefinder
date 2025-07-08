@@ -127,23 +127,23 @@ export default function ArtistPage() {
 					backgroundColor: bgColor,
 				}}
 			>
-				<div className="mx-auto container flex items-center gap-8">
+				<div className="mx-auto container flex items-center flex-col md:flex-row gap-8">
 					<div>
 						<img
 							ref={imageRef}
 							src={artist.images[0].url}
 							alt="artist cover"
-							className="w-52 h-5w-52 rounded-full object-cover"
+							className="w-32 md:w-52 rounded-full object-cover"
 							crossOrigin="anonymous"
 							width={200}
 							height={200}
 						/>
 					</div>
-					<div className="w-full">
-						<h1 className="flex items-center gap-6 scroll-m-20 text-center text-5xl font-extrabold tracking-tight text-balance">
+					<div className="w-full text-center md:text-left">
+						<h1 className="gap-6 scroll-m-20 text-center md:text-left text-3xl md:text-5xl font-extrabold tracking-tight text-balance">
 							{artist.name}
 						</h1>
-						<div className="mt-2 text-2xl">
+						<div className="mt-2 md:text-2xl">
 							{formatter.format(artist.followers.total)} Followers
 						</div>
 						{user && (

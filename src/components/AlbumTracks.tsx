@@ -40,7 +40,7 @@ export default function AlbumTracks({ imageUrl }: { imageUrl: string }) {
 	if (loading) return <LoaderCircle className="animate-spin" />;
 
 	return (
-		<div className="mt-8 mx-auto container">
+		<div className="mt-8 mx-auto px-4 md:px-0 container">
 			<h2 className="scroll-m-20 mb-8 text-3xl font-semibold tracking-tight first:mt-0">
 				Top Tracks
 			</h2>

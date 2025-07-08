@@ -17,7 +17,7 @@ export default function Navbar() {
 	const { user } = useContext(AppContext);
 	return (
 		<div className="sticky top-0 w-full h-16 border-b bg-background border-white z-50 flex items-center">
-			<div className="mx-auto container flex items-center justify-between">
+			<div className="mx-auto container px-4 md:px-0 flex items-center justify-between">
 				{/* Left side: logo and nav items */}
 				<div className="flex items-center gap-6">
 					<Link to="/" className="flex items-center gap-2">
