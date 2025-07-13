@@ -11,7 +11,6 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AppContext } from "@/contexts/AppContext";
 import { supabase } from "@/lib/supabase/client";
-import type { Artist, ArtistTrackResponse } from "@/types";
 import TopAlbums from "../components/AlbumsPage";
 import TopTracks from "../components/TracksPage";
 
@@ -143,9 +142,9 @@ export default function HomePage() {
 
 					{searchData.length > 0 && currentTab !== "Tracks" && (
 						<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-							{searchData.map((item, index) => (
+							{searchData.map((item) => (
 								<Link
-									key={item.name}
+									key={item.id}
 									className="flex flex-col items-center text-white relative"
 									to={`/${(tabTypeMap as any)[currentTab].key}/${item.id}`}
 								>
