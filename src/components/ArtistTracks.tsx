@@ -1,11 +1,12 @@
 import { LoaderCircle } from "lucide-react";
 import { Duration } from "luxon";
-import { useContext, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { AppContext } from "@/contexts/AppContext";
 import type { ArtistTrackResponse } from "@/types";
 import { Badge } from "./ui/badge";
 import { Separator } from "./ui/separator";
+import Player from "./Player";
 
 async function fetchArtistTracks(artistId: string, token: string) {
 	const res = await fetch(
@@ -26,6 +27,7 @@ export default function ArtistTracks() {
 
 	const [loading, setLoading] = useState(true);
 	const [trackResponse, setTrackResponse] = useState<ArtistTrackResponse>();
+	const [trackId, setTrackId] = useState<string>();
 
 	useEffect(() => {
 		if (!params.id || !token) return;
@@ -46,11 +48,11 @@ export default function ArtistTracks() {
 			</h2>
 			<div className="grid grid-cols-1 gap-2">
 				{trackResponse?.tracks.map((track) => (
-					<>
+					<Fragment key={track.id}>
 						<a
 							key={track.id}
 							className="flex items-center gap-8 text-white relative"
-							href={track.external_urls.spotify}
+							onClick={() => setTrackId(track.id)}
 						>
 							<img
 								src={track.album.images[0].url}
@@ -75,7 +77,9 @@ export default function ArtistTracks() {
 							</div>
 						</a>
 						<Separator />
-					</>
+						{track.id === trackId && <Player trackId={trackId ?? ""} />}
+
+					</Fragment>
 				))}
 			</div>
 		</div>

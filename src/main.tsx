@@ -4,7 +4,7 @@ import "./styles.css";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { Toaster } from "sonner";
 import Layout from "./components/layout";
-import { AppContextProvider } from "./contexts/AppContext";
+import { AppContextProvider } from "./contexts/AppProvider";
 import AlbumPage from "./routes/album";
 import ArtistPage from "./routes/artist";
 import HomePage from "./routes/home";

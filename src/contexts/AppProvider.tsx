@@ -2,21 +2,12 @@
 
 import type { User } from "@supabase/supabase-js";
 import type React from "react";
-import { createContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/client";
+import { AppContext } from "./AppContext";
 
 const CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
 const CLIENT_SECRET = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
-
-type AppContextType = {
-	token: string | null;
-	user: User | null;
-};
-
-export const AppContext = createContext<AppContextType>({
-	token: null,
-	user: null,
-});
 
 export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
