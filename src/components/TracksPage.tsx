@@ -4,6 +4,7 @@ import type { Item } from "@/types";
 import { AppContext } from "../contexts/AppContext";
 import { Badge } from "./ui/badge";
 import { Separator } from "./ui/separator";
+import Player from "./Player";
 
 // Define types for Last.fm track data
 type TrackImage = {
@@ -28,6 +29,7 @@ type EnrichedTrack = Track & {
 const TopTracks: React.FC = () => {
 	const { token } = useContext(AppContext);
 	const [topTracks, setTopTracks] = useState<EnrichedTrack[]>([]);
+	const [trackId, setTrackId] = useState<string>();
 
 	useEffect(() => {
 		if (!token) return;
@@ -40,7 +42,7 @@ const TopTracks: React.FC = () => {
 				const data = await res.json();
 
 				const enriched = await Promise.all(
-					// biome-ignore lint/suspicious/noExplicitAny: response structure not strict
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
 					data.tracks.track.map(async (track: any) => {
 						try {
 							const spotifyRes = await fetch(
@@ -89,7 +91,7 @@ const TopTracks: React.FC = () => {
 						<a
 							key={`${track.name}-${index}`}
 							className="flex items-center gap-8"
-							href={track.spotifyData?.external_urls.spotify}
+							onClick={() => setTrackId(track.spotifyData?.id)}
 						>
 							<img
 								src={
@@ -124,6 +126,8 @@ const TopTracks: React.FC = () => {
 								</span>
 							</div>
 						</a>
+						{track.spotifyData?.id === trackId && <Player trackId={track.spotifyData?.id ?? ""} />}
+
 						<Separator />
 					</React.Fragment>
 				))}

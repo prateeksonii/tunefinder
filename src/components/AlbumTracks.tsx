@@ -6,6 +6,7 @@ import { AppContext } from "@/contexts/AppContext";
 import type { AlbumTrackResponse } from "@/types";
 import { Badge } from "./ui/badge";
 import { Separator } from "./ui/separator";
+import Player from "./Player";
 
 async function fetchAlbumTracks(albumId: string, token: string) {
 	const res = await fetch(
@@ -26,6 +27,8 @@ export default function AlbumTracks({ imageUrl }: { imageUrl: string }) {
 
 	const [loading, setLoading] = useState(true);
 	const [trackResponse, setTrackResponse] = useState<AlbumTrackResponse>();
+	const [trackId, setTrackId] = useState<string>();
+
 
 	useEffect(() => {
 		if (!params.id || !token) return;
@@ -50,7 +53,7 @@ export default function AlbumTracks({ imageUrl }: { imageUrl: string }) {
 						<a
 							key={track.id}
 							className="flex items-center gap-8 relative"
-							href={track.external_urls.spotify}
+							onClick={() => setTrackId(track.id)}
 						>
 							<img
 								src={imageUrl}
@@ -74,6 +77,8 @@ export default function AlbumTracks({ imageUrl }: { imageUrl: string }) {
 								</p>
 							</div>
 						</a>
+						{track.id === trackId && <Player trackId={trackId ?? ""} />}
+
 						<Separator />
 					</>
 				))}
